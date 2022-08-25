@@ -1,0 +1,83 @@
+.desks {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+.desk {
+    background-color: var(--color-beige);
+    box-shadow: 8px 3px 8px 0px rgba(92, 91, 76, 0.2);
+    border-radius: 10px;
+    width: 100%;
+    height: 500px;
+    border: 1px solid var(--color-darkgreen);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.desk__header {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: var(--color-lightgreen);
+    border-radius: 10px;
+}
+
+.desk__header-progress {
+    background-color: var(--color-yellow);
+}
+
+.desk__header-done {
+    background-color: var(--color-grey);
+}
+
+.desk__header-title,
+.desk__header-count {
+    font-family: Open Sans;
+    font-size: var(--fsize-m);
+}
+
+.desc__todo-content {
+    height: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.todo {
+    border: 1px solid var(--color-darkgreen);
+    border-radius: 10px;
+    background-color: var(--color-beige);
+}
+
+.desk-progress {
+}
+.desk-done {
+}
+
+.desc__btn-add {
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    font-family: Open Sans;
+    font-size: var(--fsize-m);
+    background-color: var(--color-middlegreen);
+}
+
+.desc__btn-delete {
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    font-family: Open Sans;
+    font-size: var(--fsize-m);
+    background-color: var(--color-peach);
+}
+
+.desc__btn-add:hover,
+.desc__btn-delete:hover {
+    opacity: 0.7;
+}

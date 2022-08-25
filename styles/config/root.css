@@ -1,0 +1,14 @@
+:root {
+   --color-peach: #FFC090;
+   --color-beige: rgba(247, 246, 220, 0.64);
+   --color-yellow: #FAFDD6;
+   --color-lightgreen: #cbd3b9;
+   --color-middlegreen: #B1D7B4;
+   --color-darkgreen: #42855B;
+   --color-grey: #CDC2AE;
+
+   --fsize-xl: 48px;
+   --fsize-l: 36px;
+   --fsize-m: 24px;
+   --fsize-s: 18px;
+ }

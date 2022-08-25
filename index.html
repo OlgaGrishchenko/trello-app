@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles/index.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Monoton&family=Open+Sans:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+        <title>Trello</title>
+    </head>
+    <body>
+        <header class="header">
+            <div class="logo">Trello</div>
+            <div class="clock">12:34:52</div>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="desks">
+                    <section class="desk">
+                        <div class="desk__header">
+                            <span class="desk__header-title">TODO</span>
+                            <span class="desk__header-count" data-desk-create-count>0</span>
+                        </div>
+
+                        <div class="desc__todo-content">
+                           <div class="todo">Task 1</div>
+                           <div class="todo">Task 2</div>
+                        </div>
+
+                        <button class="desc__btn-add">Add todo</button>
+                    </section>
+
+                    <section class="desk desk-progress">
+                     <div class="desk__header desk__header-progress">
+                        <span class="desk__header-title">IN PROGRESS</span>
+                        <span class="desk__header-count" data-desk-create-count>0</span>
+                    </div>
+
+                    <div class="desc__todo-content">
+                     
+                    </div>
+                    </section>
+
+                    <section class="desk desk-done">
+                     <div class="desk__header desk__header-done">
+                        <span class="desk__header-title">DONE</span>
+                        <span class="desk__header-count" data-desk-create-count>0</span>
+                    </div>
+
+                    <div class="desc__todo-content"></div>
+
+                    <button class="desc__btn-delete">Delete all</button>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
