@@ -15,7 +15,6 @@ export class API {
       const response = await fetch(API.#route + id);
       if (response.ok) {
          const user = await response.json();
-         console.log(user);
          return user;
       } else {
          throw new Error(response.statusText)

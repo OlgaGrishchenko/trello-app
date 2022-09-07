@@ -1,10 +1,12 @@
 import { clock } from './utils/clock.util.js'
 import { API } from './API.js'
+import { User } from './User.js';
+import { Desks } from './Desks.js';
 
 clock();
 setInterval(clock, 1000);
 
-//new Desks(1).initialRender();
+new Desks(1).initialRender();
 
 const user = {
       name: 'Mr. Anderson',
