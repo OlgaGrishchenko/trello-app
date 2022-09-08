@@ -21,6 +21,20 @@ export class DOM {
       }
    }
 
+   text(textContent) {
+      if (typeof textContent === 'string') {
+      this.$el.textContent = textContent;
+      }
+      return  this.$el.textContent;
+   }
+
+   append(element) {
+      if (element instanceof DOM) {
+         element = element.$el;
+      }
+      this.$el.append(element)
+   }
+
    addEvent(type, callback) {
       this.$el.addEventListener(type, callback);
    }
