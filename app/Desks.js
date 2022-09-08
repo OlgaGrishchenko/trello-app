@@ -17,7 +17,7 @@ export class Desks extends User {
             title.text(el.title);
 
             const desk = createTemplate.find('[data-todo-desc-content]');
-            desk.text(el.desk);
+            desk.text(el.desc);
 
             const userName = createTemplate.find('[data-todo-user]');
             userName.text(this.user.name);
