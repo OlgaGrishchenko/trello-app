@@ -22,7 +22,7 @@ export class DOM {
    }
 
    text(textContent) {
-      if (typeof textContent === 'string') {
+      if (typeof textContent === 'string' || typeof textContent === 'number') {
       this.$el.textContent = textContent;
       }
       return  this.$el.textContent;

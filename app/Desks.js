@@ -1,7 +1,7 @@
 import { User } from "./User.js";
-import { $, DOM } from "./DOM.js";
-import { createDeskTemplate, createContentDesk } from './elements.js'
-import { API } from "./API.js"
+import { createDeskTemplate, progressDeskTemplate, doneDeskTemplate, createDeskCount, progressDeskCount, doneDeskCount, createContentDesk, progressContentDesk, doneContentDesk } from './elements.js';
+import { API } from "./API.js";
+import { DesksLogic } from "./DesksLogic.js";
 
 export class Desks extends User {
 
@@ -9,22 +9,35 @@ export class Desks extends User {
       super(userId)
    }
 
+   deskLogic() {
+      return new DesksLogic(this.user);
+   } 
+
    appendDesks() {
-      if (this.desks.create.length) {
-         this.desks.create.forEach(el => {
-            const createTemplate = $(document.importNode(createDeskTemplate.$el.content, true));
-            const title = createTemplate.find('[data-todo-title]');
-            title.text(el.title);
+      createContentDesk.clear();
 
-            const desk = createTemplate.find('[data-todo-desc-content]');
-            desk.text(el.desc);
+      const $logic = this.deskLogic();
+      const {create, progress, done} = this.desks;
 
-            const userName = createTemplate.find('[data-todo-user]');
-            userName.text(this.user.name);
-            console.log(el.name)
+      if (create.length) {
+         $logic.appendCreateTodos();
+      }
+      else {
+         createContentDesk.insertHTML('afterbegin', `<p>No todos</p>`)
+      }
 
-            createContentDesk.append(createTemplate)
-         })
+      if (progress.length) {
+         $logic.appendProgressTodos();
+      }
+      else {
+         progressContentDesk.insertHTML('afterbegin', `<p>No</p>`)
+      }
+
+      if (done.length) {
+         $logic.appendDoneTodos();
+      }
+      else {
+         doneContentDesk.insertHTML('afterbegin', `<p>No todos</p>`)
       }
    }
 
