@@ -1,90 +1,140 @@
 import {
-    createDeskTemplate,
-    progressDeskTemplate,
-    doneDeskTemplate,
-    createDeskCount,
-    progressDeskCount,
-    doneDeskCount,
-    createContentDesk,
-    progressContentDesk,
-    doneContentDesk,
+  createDeskTemplate,
+  progressDeskTemplate,
+  doneDeskTemplate,
+  createDeskCount,
+  progressDeskCount,
+  doneDeskCount,
+  createContentDesk,
+  progressContentDesk,
+  doneContentDesk,
 } from "./elements.js";
 import { $ } from "./DOM.js";
+import { getDate } from "./utils/date.utils.js";
+import { API } from "./API.js";
+import { ERROR_WHILE_MOVING, ERROR_WHILE_REMOVING } from "./constants.js";
 
 export class DesksLogic {
-    constructor(user) {
-        this.user = user;
-        this.desks = user.desks;
-    }
+  constructor(user, fetcher, appendDesks) {
+    this.user = user;
+    this.desks = user.desks;
+    this.ID = user.id;
+    this.fetcher = fetcher;
+    this.appendDesks = appendDesks;
+  }
 
-    appendCreateTodos() {
-        const { create } = this.desks;
+  applyContent(el, template) {
+    const title = template.find("[data-todo-title]");
+    title.text(el.title);
 
-        createDeskCount.text(create.length);
+    const desc = template.find("[data-todo-desc-content]");
+    desc.text(el.desc);
 
-        create.forEach((el) => {
-            const createTemplate = $(
-                document.importNode(createDeskTemplate.$el.content, true)
-            );
-            const title = createTemplate.find("[data-todo-title]");
-            title.text(el.title);
+    const userName = template.find("[data-todo-user]");
+    userName.text(this.user.name);
 
-            const desk = createTemplate.find("[data-todo-desc-content]");
-            desk.text(el.desc);
+    const todoDate = template.find("[data-todo-date]");
+    todoDate.text(el.date);
+  }
 
-            const userName = createTemplate.find("[data-todo-user]");
-            userName.text(this.user.name);
+  putFetcher(desks, errorMessage = "") {
+    this.fetcher(
+      () => API.putUser(this.ID, { desks }),
+      this.appendDesks,
+      errorMessage
+    );
+  }
 
-            const todoDate = createTemplate.find("[data-todo-date]");
-            todoDate.text(el.date);
+  appendCreateTodos() {
+    const { create } = this.desks;
 
-            createContentDesk.append(createTemplate);
-        });
-    }
+    createDeskCount.text(create.length);
 
-    appendProgressTodos() {
+    create.forEach((el) => {
+      const createTemplate = $(
+        document.importNode(createDeskTemplate.$el.content, true)
+      );
+      this.applyContent(el, createTemplate);
 
-      const { progress } = this.desks;
+      const btnMove = createTemplate.find("[data-todo-btn-move]");
 
-      progressDeskCount.text(progress.length);
+      btnMove.addEvent("click", () => {
+        const create = this.desks.create.filter((todo) => todo.id !== el.id);
+        const progress = [...this.desks.progress, el];
+        const newDesks = { ...this.desks, create, progress };
 
-         progress.forEach(el => {
-            const progressTemplate = $(document.importNode(progressDeskTemplate.$el.content, true));
-            const title = progressTemplate.find('[data-todo-title]');
-            title.text(el.title);
+        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+      });
 
-            const desk = progressTemplate.find('[data-todo-desc-content]');
-            desk.text(el.desc);
+      const btnRemove = createTemplate.find("[data-todo-btn-remove]");
+      btnRemove.addEvent('click', () => this.removeTodo('create', el));
 
-            const userName = progressTemplate.find('[data-todo-user]');
-            userName.text(this.user.name);
-            
-            const todoDate = progressTemplate.find('[data-todo-date]');
-            todoDate.text(el.date);
+      createContentDesk.append(createTemplate);
+    });
+  }
 
-            progressContentDesk.append(progressTemplate)
-         })
-    }
+  appendProgressTodos() {
+    const { progress } = this.desks;
 
-    appendDoneTodos() {
-      const { done } = this.desks;
-      doneDeskCount.text(done.length);
+    progressDeskCount.text(progress.length);
 
-         done.forEach(el => {
-            const doneTemplate = $(document.importNode(doneDeskTemplate.$el.content, true));
-            const title = doneTemplate.find('[data-todo-title]');
-            title.text(el.title);
+    progress.forEach((el) => {
+      const progressTemplate = $(
+        document.importNode(progressDeskTemplate.$el.content, true)
+      );
+      this.applyContent(el, progressTemplate);
 
-            const desk = doneTemplate.find('[data-todo-desc-content]');
-            desk.text(el.desc);
+      const btnMove = progressTemplate.find("[data-todo-btn-move]");
 
-            const userName = doneTemplate.find('[data-todo-user]');
-            userName.text(this.user.name);
-            
-            const todoDate = doneTemplate.find('[data-todo-date]');
-            todoDate.text(el.date);
+      btnMove.addEvent("click", () => {
+        const progress = this.desks.progress.filter(
+          (todo) => todo.id !== el.id
+        );
+        const done = [...this.desks.done, el];
+        const newDesks = { ...this.desks, progress, done };
 
-            doneContentDesk.append(doneTemplate)
-         })
-   }
+        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+      });
+
+      const btnBack = progressTemplate.find("[data-todo-btn-back]");
+      btnBack.addEvent("click", () => {
+        const progress = this.desks.progress.filter(
+          (todo) => todo.id !== el.id
+        );
+        const create = [...this.desks.create, el];
+        const newDesks = { ...this.desks, create, progress };
+
+        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+      });
+
+      const btnRemove = progressTemplate.find("[data-todo-btn-remove]");
+      btnRemove.addEvent('click', () => this.removeTodo('progress', el));
+
+      progressContentDesk.append(progressTemplate);
+    });
+  }
+
+  appendDoneTodos() {
+    const { done } = this.desks;
+    doneDeskCount.text(done.length);
+
+    done.forEach((el) => {
+      const doneTemplate = $(
+        document.importNode(doneDeskTemplate.$el.content, true)
+      );
+
+      this.applyContent(el, doneTemplate);
+
+      const btnRemove = doneTemplate.find("[data-todo-btn-remove]");
+      btnRemove.addEvent('click', () => this.removeTodo('done', el));
+
+      doneContentDesk.append(doneTemplate);
+    });
+  }
+
+  removeTodo(deskType, el) {
+    const newTodo = this.desks[deskType].filter((todo) => todo.id !== el.id);
+    const newDesks = { ...this.desks, [deskType]: newTodo };
+    this.putFetcher(newDesks, ERROR_WHILE_REMOVING);
+  }
 }

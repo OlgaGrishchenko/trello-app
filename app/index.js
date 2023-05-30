@@ -47,5 +47,3 @@ const user = {
     }
 
 API.putUser(1, user);
-
-
