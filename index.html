@@ -37,7 +37,7 @@
 
                             <div class="desc__todo-content" data-create-desk-content></div>
 
-                            <button class="desc__btn-add">Add todo</button>
+                            <button class="desc__btn-add" data-btn-add-todo>Add todo</button>
                         </section>
 
                         <section class="desk desk-progress">
@@ -67,7 +67,7 @@
 
                             <div class="desc__todo-content" data-done-desk-content></div>
 
-                            <button class="desc__btn-delete">Delete all</button>
+                            <button class="desc__btn-delete" data-btn-remove-all>Delete all</button>
                         </section>
                     </div>
                 </div>
@@ -133,12 +133,12 @@
             <div class="todo todo--done" data-todo>
                 <div class="todo__header" data-todo-header>
                     <span class="todo__title" data-todo-title>Title</span>
-                    <button
+                    <div><button
                         class="todo__btn-remove btn--remove-done"
                         data-todo-btn-remove
                     >
                         remove
-                    </button>
+                    </button></div>
                 </div>
 
                 <div class="todo__desc" data-todo-desc>

@@ -61,7 +61,6 @@
 }
 
 .todo__header {
-  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -89,6 +88,7 @@
   font-family: Open Sans;
   font-size: var(--fsize-m);
   background-color: var(--color-middlegreen);
+  color: var(--main-color-white);
 }
 
 .desc__btn-delete {
@@ -98,6 +98,7 @@
   font-family: Open Sans;
   font-size: var(--fsize-m);
   background-color: var(--color-peach);
+  color: var(--main-color-white);
 }
 
 .desc__btn-add:hover,
@@ -119,6 +120,7 @@
   font-size: 0.8rem;
   font-size: var(--fsize-l);
   margin-top: 50%;
+  color: var(--main-color-white);
 }
 
 .todo__btn-edit,

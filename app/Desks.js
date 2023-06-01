@@ -1,61 +1,57 @@
-import { User } from "./User.js";
-import { createContentDesk, progressContentDesk, doneContentDesk } from './elements.js';
 import { API } from "./API.js";
 import { DesksLogic } from "./DesksLogic.js";
-import { ERROR_FETCHING_USER } from './constants.js';
+import { User } from "./User.js";
+import {
+  createContentDesk,
+  progressContentDesk,
+  doneContentDesk,
+  btnRemoveAll,
+  btnAddTodo,
+} from "./elements.js";
+import { ERROR_FETCHING_USER } from "./constants.js";
 
 export class Desks extends User {
+  constructor(userId) {
+    super(userId);
 
-   constructor(userId) {
-      super(userId)
-   }
+    btnAddTodo.addEvent("click", () => {
+      console.log("dsfsd");
+    });
 
-   clearDesks() {
-      createContentDesk.clear();
-      progressContentDesk.clear();
-      doneContentDesk.clear();
+    btnRemoveAll.addEvent("click", () => {
+      this.deskLogic().removeAll();
+    });
   }
 
-   deskLogic() {
-      return new DesksLogic(
-         this.user,
-         this.fetcher.bind(this),
-         this.appendDesks.bind(this)
-         );
-   } 
+  clearDesks() {
+    createContentDesk.clear();
+    progressContentDesk.clear();
+    doneContentDesk.clear();
+  }
 
-   appendDesks() {
-      this.clearDesks();
+  deskLogic() {
+    return new DesksLogic(
+      this.user,
+      this.fetcher.bind(this),
+      this.appendDesks.bind(this)
+    );
+  }
 
-      const $logic = this.deskLogic();
-      const {create, progress, done} = this.desks;
+  appendDesks() {
+    this.clearDesks();
 
-      if (create.length) {
-         $logic.appendCreateTodos();
-      }
-      else {
-         createContentDesk.insertHTML('afterbegin', `<p class="noTodos">No todos yet</p>`)
-      }
+    const $logic = this.deskLogic();
+    $logic.appendCreateTodos();
+    $logic.appendProgressTodos();
+    $logic.appendDoneTodos();
+  }
 
-      if (progress.length) {
-         $logic.appendProgressTodos();
-      }
-      else {
-         progressContentDesk.insertHTML('afterbegin', `<p class="noTodos">No todos yet</p>`)
-      }
-
-      if (done.length) {
-         $logic.appendDoneTodos();
-      }
-      else {
-         doneContentDesk.insertHTML('afterbegin', `<p class="noTodos">No todos yet</p>`)
-      }
-   }
-
-   initialRender() {
-      this.fetcher(() => API.getUser(this.userID),
+  initialRender() {
+    this.fetcher(
+      () => API.getUser(this.userID),
       this.appendDesks.bind(this),
       ERROR_FETCHING_USER
-      )
-   }
+    );
+  }
 }
+

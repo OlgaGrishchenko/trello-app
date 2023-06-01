@@ -13,6 +13,7 @@ import { $ } from "./DOM.js";
 import { getDate } from "./utils/date.utils.js";
 import { API } from "./API.js";
 import { ERROR_WHILE_MOVING, ERROR_WHILE_REMOVING } from "./constants.js";
+import { Modal } from "./Modal.js";
 
 export class DesksLogic {
   constructor(user, fetcher, appendDesks) {
@@ -48,93 +49,159 @@ export class DesksLogic {
   appendCreateTodos() {
     const { create } = this.desks;
 
-    createDeskCount.text(create.length);
+    createDeskCount.text(create?.length);
 
-    create.forEach((el) => {
-      const createTemplate = $(
-        document.importNode(createDeskTemplate.$el.content, true)
-      );
-      this.applyContent(el, createTemplate);
+    if (create?.length) {
+      create.forEach((el) => {
+        const createTemplate = $(
+          document.importNode(createDeskTemplate.$el.content, true)
+        );
+        this.applyContent(el, createTemplate);
 
-      const btnMove = createTemplate.find("[data-todo-btn-move]");
+        const btnMove = createTemplate.find("[data-todo-btn-move]");
+        btnMove.addEvent("click", () => {
+          const limit = 3;
+          if (this.desks.progress.length >= limit) {
+            Modal.addWarningLimitLayout(limit);
+            return;
+          }
 
-      btnMove.addEvent("click", () => {
-        const create = this.desks.create.filter((todo) => todo.id !== el.id);
-        const progress = [...this.desks.progress, el];
-        const newDesks = { ...this.desks, create, progress };
+          const create = this.desks.create.filter((todo) => todo.id !== el.id);
+          const progress = [...this.desks.progress, el];
 
-        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+          const newDesks = { ...this.desks, create, progress };
+
+          this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+        });
+
+        const btnRemove = createTemplate.find("[data-todo-btn-remove]");
+        btnRemove.addEvent("click", () => this.removeTodo("create", el));
+
+        const btnEdit = createTemplate.find("[data-todo-btn-edit]");
+        btnEdit.addEvent("click", () => {
+          const editTodo = (newEl) => {
+            const create = [...this.desks.create].map((todo) => {
+              if (todo.id === el.id) {
+                return newEl;
+              }
+              return todo;
+            });
+
+            const newDesks = { ...this.desks, create };
+            this.putFetcher(newDesks, ERROR_WHILE_EDITING, true);
+          };
+          Modal.addEditTodoLayout(el, editTodo);
+        });
+
+        createContentDesk.append(createTemplate);
       });
-
-      const btnRemove = createTemplate.find("[data-todo-btn-remove]");
-      btnRemove.addEvent('click', () => this.removeTodo('create', el));
-
-      createContentDesk.append(createTemplate);
-    });
+    } else {
+      createContentDesk.insertHTML(
+        "afterbegin",
+        `<p class="noTodos">No todos yet</p>`
+      );
+    }
   }
 
   appendProgressTodos() {
     const { progress } = this.desks;
 
-    progressDeskCount.text(progress.length);
+    progressDeskCount.text(progress?.length);
 
-    progress.forEach((el) => {
-      const progressTemplate = $(
-        document.importNode(progressDeskTemplate.$el.content, true)
+    if (progress?.length) {
+      progress.forEach((el) => {
+        const progressTemplate = $(
+          document.importNode(progressDeskTemplate.$el.content, true)
+        );
+        this.applyContent(el, progressTemplate);
+
+        const btnMove = progressTemplate.find("[data-todo-btn-move]");
+        btnMove.addEvent("click", () => {
+          const progress = this.desks.progress.filter(
+            (todo) => todo.id !== el.id
+          );
+          const done = [...this.desks.done, el];
+
+          const newDesks = { ...this.desks, progress, done };
+
+          this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+        });
+
+        const btnBack = progressTemplate.find("[data-todo-btn-back]");
+        btnBack.addEvent("click", () => {
+          const progress = this.desks.progress.filter(
+            (todo) => todo.id !== el.id
+          );
+          const create = [...this.desks.create, el];
+          const newDesks = { ...this.desks, create, progress };
+
+          this.putFetcher(newDesks, ERROR_WHILE_MOVING);
+        });
+
+        const btnRemove = progressTemplate.find("[ data-todo-btn-remove]");
+        btnRemove.addEvent("click", () => this.removeTodo("progress", el));
+
+        progressContentDesk.append(progressTemplate);
+      });
+    } else {
+      progressContentDesk.insertHTML(
+        "afterbegin",
+        `<p class="noTodos">No todos yet</p>`
       );
-      this.applyContent(el, progressTemplate);
-
-      const btnMove = progressTemplate.find("[data-todo-btn-move]");
-
-      btnMove.addEvent("click", () => {
-        const progress = this.desks.progress.filter(
-          (todo) => todo.id !== el.id
-        );
-        const done = [...this.desks.done, el];
-        const newDesks = { ...this.desks, progress, done };
-
-        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
-      });
-
-      const btnBack = progressTemplate.find("[data-todo-btn-back]");
-      btnBack.addEvent("click", () => {
-        const progress = this.desks.progress.filter(
-          (todo) => todo.id !== el.id
-        );
-        const create = [...this.desks.create, el];
-        const newDesks = { ...this.desks, create, progress };
-
-        this.putFetcher(newDesks, ERROR_WHILE_MOVING);
-      });
-
-      const btnRemove = progressTemplate.find("[data-todo-btn-remove]");
-      btnRemove.addEvent('click', () => this.removeTodo('progress', el));
-
-      progressContentDesk.append(progressTemplate);
-    });
+    }
   }
 
   appendDoneTodos() {
     const { done } = this.desks;
-    doneDeskCount.text(done.length);
 
-    done.forEach((el) => {
-      const doneTemplate = $(
-        document.importNode(doneDeskTemplate.$el.content, true)
+    doneDeskCount.text(done?.length);
+
+    if (done?.length) {
+      done.forEach((el) => {
+        const doneTemplate = $(
+          document.importNode(doneDeskTemplate.$el.content, true)
+        );
+        this.applyContent(el, doneTemplate);
+
+        const btnRemove = doneTemplate.find("[ data-todo-btn-remove]");
+        btnRemove.addEvent("click", () => this.removeTodo("done", el));
+
+        doneContentDesk.append(doneTemplate);
+      });
+    } else {
+      doneContentDesk.insertHTML(
+        "afterbegin",
+        `<p class="noTodos">No todos yet</p>`
       );
-
-      this.applyContent(el, doneTemplate);
-
-      const btnRemove = doneTemplate.find("[data-todo-btn-remove]");
-      btnRemove.addEvent('click', () => this.removeTodo('done', el));
-
-      doneContentDesk.append(doneTemplate);
-    });
+    }
   }
 
   removeTodo(deskType, el) {
     const newTodo = this.desks[deskType].filter((todo) => todo.id !== el.id);
     const newDesks = { ...this.desks, [deskType]: newTodo };
     this.putFetcher(newDesks, ERROR_WHILE_REMOVING);
+  }
+
+  removeAll() {
+    const remove = () => {
+      const newDesks = { ...this.desks, done: [] };
+      this.putFetcher(newDesks, ERROR_WHILE_REMOVING);
+    };
+    Modal.addWarningRemoveLayout(remove);
+  }
+
+  addNewTodo() {
+    const limit = 10;
+    if (this.desks.create.length >= limit) {
+      Modal.addWarningLimitLayout(limit);
+      return;
+    }
+
+    const createTodo = (newTodo) => {
+      const create = [...this.desks.create, newTodo];
+      const newDesks = { ...this.desks, create };
+      this.putFetcher(newDesks, ERROR_WHILE_CREATING, true);
+    };
+    Modal.addNewTodoLayout(createTodo);
   }
 }
