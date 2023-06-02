@@ -12,7 +12,7 @@ import {
 import { $ } from "./DOM.js";
 import { getDate } from "./utils/date.utils.js";
 import { API } from "./API.js";
-import { ERROR_WHILE_MOVING, ERROR_WHILE_REMOVING } from "./constants.js";
+import { ERROR_WHILE_MOVING, ERROR_WHILE_REMOVING, ERROR_WHILE_CREATING, ERROR_WHILE_EDITING } from "./constants.js";
 import { Modal } from "./Modal.js";
 
 export class DesksLogic {

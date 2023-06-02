@@ -1,0 +1,51 @@
+.modal__new-todo,
+.user-selection {
+  width: min(450px, 90%);
+  border-radius: 5px;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  background-color: var(--main-color-white);
+  text-align: center;
+}
+
+.new-todo__header {
+  margin: 0;
+}
+
+.new-todo__title {
+  padding: 0.5em;
+  font-size: var(--font-sz-3);
+}
+.new-todo__description {
+  padding: 0.5em;
+  font-size: var(--font-sz-4);
+  resize: none;
+}
+.new-todo__buttons {
+}
+
+.new-todo__cancel,
+.new-todo__add {
+  padding: 0.5em 1em;
+  border: none;
+  font-size: var(--font-sz-3);
+  background-color: var(--main-color-coral);
+  cursor: pointer;
+}
+
+.new-todo__add {
+  background-color: var(--main-color-medium);
+}
+
+.new-todo__cancel:hover,
+.new-todo__add:hover {
+  opacity: 0.8;
+}
+
+.user-selection {
+  height: 150px;
+  justify-content: flex-start;
+}

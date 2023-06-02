@@ -15,7 +15,7 @@ export class Desks extends User {
     super(userId);
 
     btnAddTodo.addEvent("click", () => {
-      console.log("dsfsd");
+      this.deskLogic().addNewTodo();
     });
 
     btnRemoveAll.addEvent("click", () => {
