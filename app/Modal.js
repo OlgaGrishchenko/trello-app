@@ -252,9 +252,9 @@ export class Modal {
 
         <select name="users" id="user-select">
             <option value="">--Please choose an option--</option>
-            <option value="1">Evgeniy Petrov</option>
-            <option value="2">Alex</option>
-            <option value="3">Guy Halvorson</option>
+            <option value="1">Mr. Anderson</option>
+            <option value="2">Ms. Guy Goldner</option>
+            <option value="3">Arnold Jast</option>
         </select>
     `
     );

@@ -7,6 +7,8 @@ import {
   doneContentDesk,
   btnRemoveAll,
   btnAddTodo,
+  headerUserName,
+  headerAvatar,
 } from "./elements.js";
 import { ERROR_FETCHING_USER } from "./constants.js";
 
@@ -39,6 +41,8 @@ export class Desks extends User {
 
   appendDesks() {
     this.clearDesks();
+    headerUserName.text(this.user.name);
+    headerAvatar.$el.src = this.user.avatar;
 
     const $logic = this.deskLogic();
     $logic.appendCreateTodos();
@@ -53,5 +57,12 @@ export class Desks extends User {
       ERROR_FETCHING_USER
     );
   }
-}
 
+  render(id = this.userID) {
+    this.fetcher(
+      () => API.getUser(id),
+      this.appendDesks.bind(this),
+      ERROR_FETCHING_USER
+    );
+  }
+}
